@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Editor.js</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.15.2/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.15.2/theme/material.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            padding: 55px 5px 5px 5px;
+            background-color: #F6F6F6;
+            box-sizing: border-box;
+        }
+        .split {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .content {
+            border: 1px solid #C0C0C0;
+            box-shadow: inset 0 1px 2px #e4e4e4;
+            background-color: #fff;
+        }
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+        .gutter.gutter-horizontal {
+            cursor: col-resize;
+            background-image: url('../grips/vertical.png');
+        }
+        .gutter.gutter-vertical {
+            cursor: row-resize;
+            background-image: url('../grips/horizontal.png');
+        }
+        .split.split-horizontal, .gutter.gutter-horizontal {
+            height: 100%;
+            float: left;
+        }
+        .CodeMirror {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" id="preview-button">Run the code</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="a" class="split split-horizontal">
+        <div id="c" class="split content">
+            <textarea id="css">css</textarea>
+        </div>
+        <div id="d" class="split content">
+            <textarea id="html">html</textarea>
+        </div>
+    </div>
+    <div id="b" class="split split-horizontal">
+        <div id="e" class="split content">
+            <textarea id="js">js</textarea>
+        </div>
+        <div id="preview-col" class="split content"></div>
+    </div>
+
+    <script src="../../split.js"></script>
+    <script src="../public/js/bundle.js"></script>
+    <script>
+        Split(['#a', '#b'], {
+            gutterSize: 8,
+            cursor: 'col-resize'
+        });
+
+        Split(['#c', '#d'], {
+            direction: 'vertical',
+            sizes: [50,50],
+            gutterSize: 8,
+            cursor: 'row-resize'
+        });
+
+        Split(['#e', '#preview-col'], {
+            direction: 'vertical',
+            sizes: [50,50],
+            gutterSize: 8,
+            cursor: 'row-resize'
+        });
+        
+        var editor = new Editor({
+            globalCodemirrorOptions: {
+                lineNumbers: true,
+                matchBrackets: true,
+                mode: "htmlmixed",
+                indentUnit: 4,
+                styleActiveLine: true,
+                indentWithTabs: true,
+                theme: 'material',
+                lineWrapping: true
+            },
+
+            html: {
+                element: '#html',
+            },
+
+            css: {
+                element: '#css',
+                codemirrorOptions: {
+                    mode: 'css'
+                }
+            },
+
+            js: {
+                element: '#js',
+                codemirrorOptions: {
+                    mode: 'javascript'
+                }
+            },
+
+            preview: {
+                element: '#preview-col',
+                button: '#preview-button'
+            }
+        });
+    </script>
+</body>
+</html>
