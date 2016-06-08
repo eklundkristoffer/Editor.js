@@ -11038,21 +11038,9 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 },{"../../lib/codemirror":1}],6:[function(require,module,exports){
 'use strict';
 
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-    };
-}();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -11069,35 +11057,22 @@ var CodeMirror = require('codemirror');
 
 var Editor = function () {
     /**
-     * Creates a new Editor instance. 
-     * @param {Object}  options
-     * @return {void}
+    * Create a new Editor instance.
+    * @return {Editor}
     */
 
-    function Editor() {
-        var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
+    function Editor(options) {
         _classCallCheck(this, Editor);
 
         this.options = options;
 
-        if (this.options.html) {
-            var html = this.options.html;
-            html.codemirrorOptions = html.codemirrorOptions || {};
-            html.codemirror = this.codemirror(html.element, html.codemirrorOptions);
-        }
+        var that = this;
 
-        if (this.options.css) {
-            var css = this.options.css;
-            css.codemirrorOptions = css.codemirrorOptions || {};
-            css.codemirror = this.codemirror(css.element, css.codemirrorOptions);
-        }
+        Object.keys(options.textareas).forEach(function (name) {
+            var obj = options.textareas[name];
 
-        if (this.options.js) {
-            var js = this.options.js;
-            js.codemirrorOptions = js.codemirrorOptions || {};
-            js.codemirror = this.codemirror(js.element, js.codemirrorOptions);
-        }
+            obj['codemirror'] = that.codemirror(obj.element, obj.codemirror || {});
+        });
 
         if (this.options.preview) {
             this.preview = new Preview(this);
@@ -11105,17 +11080,16 @@ var Editor = function () {
     }
 
     /**
-     * Creates a new Codemirror instance.
-     * @return {Object} CodeMirror
+    * Create a new CodeMirror instance at given element.  
+    * @return {CodeMirror}
     */
+
 
     _createClass(Editor, [{
         key: 'codemirror',
-        value: function codemirror(element) {
-            var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-            if (this.options.globalCodemirrorOptions) {
-                options = merge_options(this.options.globalCodemirrorOptions, options);
+        value: function codemirror(element, options) {
+            if (this.options.codemirror) {
+                options = merge_options(this.options.codemirror, options);
             }
 
             return CodeMirror.fromTextArea(document.querySelectorAll(element)[0], options);
@@ -11136,7 +11110,6 @@ window.Editor = Editor;
  * @param obj2
  * @returns obj3 a new object based on obj1 and obj2
  */
-
 function merge_options(obj1, obj2) {
   var obj3 = {};
   for (var attrname in obj1) {
@@ -11155,44 +11128,15 @@ window.merge_options = merge_options;
 //     sizes: [50,50],
 // });
 
-// Split(['#a', '#b'], {
-//     gutterSize: 8,
-//     cursor: 'col-resize'
-// });
-
-// Split(['#c', '#d'], {
-//     direction: 'vertical',
-//     sizes: [50,50],
-//     gutterSize: 8,
-//     cursor: 'row-resize'
-// });
-
-// Split(['#e', '#preview-col'], {
-//     direction: 'vertical',
-//     sizes: [50,50],
-//     gutterSize: 8,
-//     cursor: 'row-resize'
-// });
+// ..
 "use strict";
 
 },{}],9:[function(require,module,exports){
 'use strict';
 
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-    };
-}();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -11201,91 +11145,91 @@ tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
 
 var Preview = function () {
     /**
-    * Creates a new Preview instance. 
-    * @param  {Object}  Editor
-    * @return {void}
+    * Create a new Preview instance.
+    * @return {Preview}
     */
 
     function Preview(editor) {
         _classCallCheck(this, Preview);
 
-        this.editor = editor;
-        this.options = this.editor.options.preview;
-
-        if (this.editor.options.html) {
-            this.html = this.editor.options.html;
-        }
-
-        if (this.editor.options.css) {
-            this.css = this.editor.options.css;
-        }
-
-        if (this.editor.options.js) {
-            this.js = this.editor.options.js;
-        }
-
-        this.element = this.options.element;
-        this.button = this.options.button;
-
-        this.run();
+        this.textareas = editor.options.textareas;
+        this.options = editor.options.preview;
         this.attachClickEvent();
+        this.compile();
     }
 
     /**
-    * Attach click event to preview button. 
+    * Compile all textareas and show them as preview.
     * @return {Void}
     */
 
+
     _createClass(Preview, [{
-        key: 'attachClickEvent',
-        value: function attachClickEvent() {
-            var instance = this;
+        key: 'compile',
+        value: function compile() {
+            this.iframe = this.createAndInsertIframe();
+            var that = this,
+                val = '';
 
-            document.querySelectorAll(this.button)[0].addEventListener("click", function () {
-                instance.run();
+            Object.keys(this.textareas).forEach(function (name) {
+                var obj = that.textareas[name];
+
+                if (obj.tags) {
+                    val += obj.tags[0] + obj['codemirror'].getValue() + obj.tags[1];
+                } else {
+                    val += obj['codemirror'].getValue();
+                }
             });
-        }
 
-        /**
-        * Compile and show the preview.
-        * @return {Void}
-        */
-
-    }, {
-        key: 'run',
-        value: function run() {
-            if (!(typeof document.querySelectorAll(this.element + ' iframe')[0] == 'undefined')) {
-                document.querySelectorAll(this.element)[0].removeChild(document.getElementById("result"));
-            }
-
-            var iframe = document.createElement('iframe');
-            iframe.id = 'result';
-            iframe.src = "javascript: '';";
-            iframe.style = 'height: 100%; width: 100%;';
-
-            // Append the iframe to preview box.
-            document.querySelectorAll(this.element)[0].appendChild(iframe);
-
-            // Append the html to body of the iframe document.
-            var val = this.html.codemirror.getValue();
-
-            if (this.css) {
-                val += '<style> ' + this.css.codemirror.getValue() + ' </style>';
-            }
-
-            if (this.js) {
-                val += '<scr' + 'ipt type="text/javascript"> ' + this.js.codemirror.getValue() + ' </scr' + 'ipt>';
-            }
-
-            var doc = iframe.contentWindow || iframe.contentDocument;
+            var doc = this.iframe.contentWindow || this.iframe.contentDocument;
 
             if (doc.document) {
                 doc = doc.document;
             }
 
-            // Open and write to the iframe document.
             doc.open().write(val);
             doc.close();
+        }
+
+        /**
+        * Create and add the iframe to DOM.
+        * @return {Element}
+        */
+
+    }, {
+        key: 'createAndInsertIframe',
+        value: function createAndInsertIframe() {
+            if (!(typeof document.querySelectorAll(this.options.element + ' iframe')[0] == 'undefined')) {
+                document.querySelectorAll(this.options.element)[0].removeChild(document.getElementById("result"));
+            }
+
+            if (this.options.onRun) {
+                this.options.onRun();
+            }
+
+            var iframe = document.createElement('iframe');
+            iframe.id = 'result';
+            iframe.src = "javascript: '';";
+            iframe.style = 'height: 100%; width: 100%; border: none;';
+
+            document.querySelectorAll(this.options.element)[0].appendChild(iframe);
+
+            return iframe;
+        }
+
+        /**
+        * Bind click event to preview button.
+        * @return {Void}
+        */
+
+    }, {
+        key: 'attachClickEvent',
+        value: function attachClickEvent() {
+            var instance = this;
+
+            document.querySelectorAll(this.options.button)[0].addEventListener("click", function () {
+                instance.compile();
+            });
         }
     }]);
 

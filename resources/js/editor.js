@@ -13,31 +13,19 @@ var CodeMirror = require('codemirror');
 
 class Editor {
     /**
-     * Creates a new Editor instance. 
-     * @param {Object}  options
-     * @return {void}
+    * Create a new Editor instance.
+    * @return {Editor}
     */
-    constructor(options = {}) {
+    constructor(options) {
         this.options = options;
 
-        if (this.options.html) {
-            var html = this.options.html;
-            html.codemirrorOptions = html.codemirrorOptions || {}
-            html.codemirror = this.codemirror(html.element, html.codemirrorOptions);
-        }
+        var that = this;
 
-        if (this.options.css) {
-            var css = this.options.css;
-            css.codemirrorOptions = css.codemirrorOptions || {}
-            css.codemirror = this.codemirror(css.element, css.codemirrorOptions);
-        }
+        Object.keys(options.textareas).forEach(function(name) {
+            var obj = options.textareas[name];
 
-
-        if (this.options.js) {
-            var js = this.options.js;
-            js.codemirrorOptions = js.codemirrorOptions || {}
-            js.codemirror = this.codemirror(js.element, js.codemirrorOptions);
-        }
+            obj['codemirror'] = that.codemirror(obj.element, obj.codemirror || {});
+        });
 
         if (this.options.preview) {
             this.preview = new Preview(this);
@@ -45,12 +33,12 @@ class Editor {
     }
 
     /**
-     * Creates a new Codemirror instance.
-     * @return {Object} CodeMirror
+    * Create a new CodeMirror instance at given element.  
+    * @return {CodeMirror}
     */
-    codemirror(element, options = {}) {
-        if (this.options.globalCodemirrorOptions) {
-            options = merge_options(this.options.globalCodemirrorOptions, options);
+    codemirror(element, options) {
+        if (this.options.codemirror) {
+            options = merge_options(this.options.codemirror, options);
         }
 
         return CodeMirror.fromTextArea(document.querySelectorAll(element)[0], options);

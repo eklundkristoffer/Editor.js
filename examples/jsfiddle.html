@@ -34,11 +34,9 @@
         }
         .gutter.gutter-horizontal {
             cursor: col-resize;
-            background-image: url('../grips/vertical.png');
         }
         .gutter.gutter-vertical {
             cursor: row-resize;
-            background-image: url('../grips/horizontal.png');
         }
         .split.split-horizontal, .gutter.gutter-horizontal {
             height: 100%;
@@ -66,15 +64,21 @@
     
     <div id="a" class="split split-horizontal">
         <div id="c" class="split content">
-            <textarea id="css">css</textarea>
+            <textarea id="css">body {
+    background-color: green;
+}</textarea>
         </div>
         <div id="d" class="split content">
-            <textarea id="html">html</textarea>
+            <textarea id="html">&lt;div id="my-editor"&gt;
+    <button onclick="myFunction()">Click Me!</button>
+&lt;/div&gt;</textarea>
         </div>
     </div>
     <div id="b" class="split split-horizontal">
         <div id="e" class="split content">
-            <textarea id="js">js</textarea>
+            <textarea id="js">function myFunction() {
+    alert('Editor.js is awesome!');
+}</textarea>
         </div>
         <div id="preview-col" class="split content"></div>
     </div>
@@ -101,41 +105,49 @@
             cursor: 'row-resize'
         });
         
-        var editor = new Editor({
-            globalCodemirrorOptions: {
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: "htmlmixed",
-                indentUnit: 4,
-                styleActiveLine: true,
-                indentWithTabs: true,
-                theme: 'material',
-                lineWrapping: true
-            },
+        (function() {
+            var editor = new Editor({
+                codemirror: {
+                    indentUnit: 4,
+                    lineNumbers: true
+                },
 
-            html: {
-                element: '#html',
-            },
+                textareas: {
+                    'html': {
+                        element: '#html'
+                    },
 
-            css: {
-                element: '#css',
-                codemirrorOptions: {
-                    mode: 'css'
+                    'css': {
+                        element: '#css',
+
+                        codemirror: {
+                            mode: 'css'
+                        },
+
+                        tags: [
+                            '<style>', '<\/style>'
+                        ]
+                    },
+
+                    'js': {
+                        element: '#js',
+
+                        codemirror: {
+                            mode: 'javascript'
+                        },
+
+                        tags: [
+                            '<script>', '<\/script>'
+                        ]
+                    }
+                },
+
+                preview: {
+                    element: '#preview-col',
+                    button: '#preview-button'
                 }
-            },
-
-            js: {
-                element: '#js',
-                codemirrorOptions: {
-                    mode: 'javascript'
-                }
-            },
-
-            preview: {
-                element: '#preview-col',
-                button: '#preview-button'
-            }
-        });
+            });
+        })();
     </script>
 </body>
 </html>
