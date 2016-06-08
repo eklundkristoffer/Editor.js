@@ -147,6 +147,11 @@
                     button: '#preview-button'
                 }
             });
+
+            // Example of a workaround to get live preview working.
+            // editor.preview.textareas.html.codemirror.on('change', function(cm, change) {
+            //     editor.preview.compile();
+            // });
         })();
     </script>
 </body>

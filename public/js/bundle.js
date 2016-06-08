@@ -11048,7 +11048,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 */
 
 require("codemirror/mode/xml/xml");
-require('codemirror/mode/xml/xml');
 require('codemirror/mode/css/css');
 require('codemirror/mode/htmlmixed/htmlmixed');
 require('codemirror/mode/javascript/javascript');
