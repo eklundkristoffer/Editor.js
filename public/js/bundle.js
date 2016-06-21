@@ -11079,7 +11079,7 @@ var Editor = function () {
     }
 
     /**
-    * Create a new CodeMirror instance at given element.  
+    * Create a new CodeMirror instance at given element.
     * @return {CodeMirror}
     */
 
@@ -11098,6 +11098,7 @@ var Editor = function () {
     return Editor;
 }();
 
+window.CodeMirror = CodeMirror;
 window.Editor = Editor;
 
 },{"codemirror":1,"codemirror/mode/css/css":2,"codemirror/mode/htmlmixed/htmlmixed":3,"codemirror/mode/javascript/javascript":4,"codemirror/mode/xml/xml":5}],7:[function(require,module,exports){
@@ -11123,12 +11124,59 @@ function merge_options(obj1, obj2) {
 window.merge_options = merge_options;
 
 },{}],8:[function(require,module,exports){
-// Split(['#code-col', '#preview-col'], {
-//     sizes: [50,50],
-// });
-
-// ..
 "use strict";
+
+var ajax = {};
+ajax.x = function () {
+    if (typeof XMLHttpRequest !== 'undefined') {
+        return new XMLHttpRequest();
+    }
+    var versions = ["MSXML2.XmlHttp.6.0", "MSXML2.XmlHttp.5.0", "MSXML2.XmlHttp.4.0", "MSXML2.XmlHttp.3.0", "MSXML2.XmlHttp.2.0", "Microsoft.XmlHttp"];
+
+    var xhr;
+    for (var i = 0; i < versions.length; i++) {
+        try {
+            xhr = new ActiveXObject(versions[i]);
+            break;
+        } catch (e) {}
+    }
+    return xhr;
+};
+
+ajax.send = function (url, callback, method, data, async) {
+    if (async === undefined) {
+        async = true;
+    }
+    var x = ajax.x();
+    x.open(method, url, async);
+    x.onreadystatechange = function () {
+        if (x.readyState == 4) {
+            callback(x.responseText);
+        }
+    };
+    if (method == 'POST') {
+        x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    }
+    x.send(data);
+};
+
+ajax.get = function (url, data, callback, async) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async);
+};
+
+ajax.post = function (url, data, callback, async) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url, callback, 'POST', query.join('&'), async);
+};
+
+window.ajax = ajax;
 
 },{}],9:[function(require,module,exports){
 'use strict';
@@ -11151,10 +11199,16 @@ var Preview = function () {
     function Preview(editor) {
         _classCallCheck(this, Preview);
 
+        this.editor = editor;
         this.textareas = editor.options.textareas;
         this.options = editor.options.preview;
         this.attachClickEvent();
-        this.compile();
+
+        if (this.options.compiler) {
+            this.options.compiler(this.editor, this, this.textareas);
+        } else {
+            this.compileAll();
+        }
     }
 
     /**
@@ -11164,21 +11218,39 @@ var Preview = function () {
 
 
     _createClass(Preview, [{
-        key: 'compile',
-        value: function compile() {
-            this.iframe = this.createAndInsertIframe();
+        key: 'compileAll',
+        value: function compileAll() {
             var that = this,
                 val = '';
 
             Object.keys(this.textareas).forEach(function (name) {
                 var obj = that.textareas[name];
+                var value = obj['codemirror'].getValue();
 
                 if (obj.tags) {
-                    val += obj.tags[0] + obj['codemirror'].getValue() + obj.tags[1];
-                } else {
-                    val += obj['codemirror'].getValue();
+                    // Wrap the code around given tags.
+                    val += obj.tags[0] + value + obj.tags[1];
+                } else if (val == '') {
+                    // This only runs if the val hasn't been set already,
+                    // by onCompile, or whatever.
+                    val += value;
                 }
             });
+
+            if (!(val == '')) {
+                this.compile(val);
+            }
+        }
+
+        /**
+        * Compile the given value.
+        * @return {Void}
+        */
+
+    }, {
+        key: 'compile',
+        value: function compile(value) {
+            this.iframe = this.createAndInsertIframe();
 
             var doc = this.iframe.contentWindow || this.iframe.contentDocument;
 
@@ -11186,7 +11258,7 @@ var Preview = function () {
                 doc = doc.document;
             }
 
-            doc.open().write(val);
+            doc.open().write(value);
             doc.close();
         }
 
@@ -11229,6 +11301,11 @@ var Preview = function () {
             document.querySelectorAll(this.options.button)[0].addEventListener("click", function () {
                 instance.compile();
             });
+        }
+    }, {
+        key: 'onCompile',
+        value: function onCompile(callback) {
+            return callback(this.textareas);
         }
     }]);
 

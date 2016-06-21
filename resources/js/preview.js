@@ -9,29 +9,50 @@ class Preview {
     * @return {Preview}
     */
     constructor(editor) {
+        this.editor = editor;
         this.textareas = editor.options.textareas;
         this.options = editor.options.preview;
         this.attachClickEvent();
-        this.compile();
+
+        if (this.options.compiler) {
+            this.options.compiler(this.editor, this, this.textareas);
+        } else {
+            this.compileAll();
+        }
     }
 
     /**
     * Compile all textareas and show them as preview.
     * @return {Void}
     */
-    compile() {
-        this.iframe = this.createAndInsertIframe();
+    compileAll() {
         var that = this, val = '';
 
         Object.keys(this.textareas).forEach(function(name) {
             var obj = that.textareas[name];
+            var value = obj['codemirror'].getValue();
 
             if (obj.tags) {
-                val += obj.tags[0] + obj['codemirror'].getValue() + obj.tags[1];
-            } else {
-                val += obj['codemirror'].getValue();
+                // Wrap the code around given tags. 
+                val += obj.tags[0] + value + obj.tags[1];
+            } else if (val == '') {
+                // This only runs if the val hasn't been set already, 
+                // by onCompile, or whatever. 
+                val += value;
             }
         });
+
+        if (! (val == '')) {
+            this.compile(val);
+        }
+    }
+
+    /**
+    * Compile the given value.
+    * @return {Void}
+    */
+    compile(value) {
+        this.iframe = this.createAndInsertIframe();
 
         var doc = this.iframe.contentWindow || this.iframe.contentDocument;
 
@@ -39,7 +60,7 @@ class Preview {
             doc = doc.document;
         }
 
-        doc.open().write(val);
+        doc.open().write(value);
         doc.close();
     }
 
@@ -76,6 +97,10 @@ class Preview {
         document.querySelectorAll(this.options.button)[0].addEventListener("click", function() {
             instance.compile();
         });
+    }
+
+    onCompile(callback) {
+        return callback(this.textareas);
     }
 }
 

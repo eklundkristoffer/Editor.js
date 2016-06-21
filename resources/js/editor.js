@@ -17,7 +17,7 @@ class Editor {
     */
     constructor(options) {
         this.options = options;
-
+        
         var that = this;
 
         Object.keys(options.textareas).forEach(function(name) {
@@ -32,7 +32,7 @@ class Editor {
     }
 
     /**
-    * Create a new CodeMirror instance at given element.  
+    * Create a new CodeMirror instance at given element.
     * @return {CodeMirror}
     */
     codemirror(element, options) {
@@ -44,5 +44,5 @@ class Editor {
     }
 }
 
+window.CodeMirror = CodeMirror;
 window.Editor = Editor;
-

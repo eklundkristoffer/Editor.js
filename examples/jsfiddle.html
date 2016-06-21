@@ -105,54 +105,67 @@
             cursor: 'row-resize'
         });
         
-        (function() {
-            var editor = new Editor({
-                codemirror: {
-                    indentUnit: 4,
-                    lineNumbers: true
+        var editor = new Editor({
+            codemirror: {
+                indentUnit: 4,
+                lineNumbers: true
+            },
+
+            textareas: {
+                'html': {
+                    element: '#html'
                 },
 
-                textareas: {
-                    'html': {
-                        element: '#html'
+                'css': {
+                    element: '#css',
+
+                    codemirror: {
+                        mode: 'css'
                     },
 
-                    'css': {
-                        element: '#css',
-
-                        codemirror: {
-                            mode: 'css'
-                        },
-
-                        tags: [
-                            '<style>', '<\/style>'
-                        ]
-                    },
-
-                    'js': {
-                        element: '#js',
-
-                        codemirror: {
-                            mode: 'javascript'
-                        },
-
-                        tags: [
-                            '<script>', '<\/script>'
-                        ]
-                    }
+                    tags: [
+                        '<style>', '<\/style>'
+                    ]
                 },
 
-                preview: {
-                    element: '#preview-col',
-                    button: '#preview-button'
+                'js': {
+                    element: '#js',
+
+                    codemirror: {
+                        mode: 'javascript'
+                    },
+
+                    tags: [
+                        '<script>', '<\/script>'
+                    ]
                 }
-            });
+            },
 
-            // Example of a workaround to get live preview working.
-            // editor.preview.textareas.html.codemirror.on('change', function(cm, change) {
-            //     editor.preview.compile();
-            // });
-        })();
+            preview: {
+                element: '#preview-col',
+
+                button: '#preview-button',
+
+                compiler: function(editor, preview, textareas) {
+                    var data = {
+                        html: textareas.html.codemirror.getValue(),
+                        css: textareas.css.codemirror.getValue(),
+                        js: textareas.js.codemirror.getValue()
+                    }
+
+                    ajax.post('./test.php', data, function(response) {
+                        obj = JSON.parse(response);
+
+                        preview.compile(obj.value);
+                    });
+                }
+            }
+        });
+
+        // Example of a workaround to get live preview working.
+        // editor.preview.textareas.html.codemirror.on('change', function(cm, change) {
+        //     editor.preview.compile();
+        // });
     </script>
 </body>
 </html>
